@@ -1,0 +1,1 @@
+(()=>{"use strict";(0,require("http").createServer)(((e,o)=>{const{method:l,url:t}=e;console.log(`Получен ${l}-запрос на ${t}`),o.write("Hello Node.js!"),o.end("\nBye!")})).listen(5e3,"localhost",(()=>{console.log("Сервер запущен на порту 5000")}))})();

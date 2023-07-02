@@ -1,0 +1,29 @@
+env:
+  browser: true
+  es2021: true
+extends:
+  - plugin:@angular-eslint/recommended
+  - plugin:@angular-eslint/template/process-inline-templates
+  - plugin:ngrx/recommended
+  - airbnb-base
+  - airbnb-typescript/base
+  - prettier
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: latest
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+rules: {
+  "@angular-eslint/no-empty-lifecycle-method": "off",
+  "import/prefer-default-export": "off",
+  "class-methods-use-this": "off",
+  "no-console": "off",
+  "linebreak-style": "off",
+  "@typescript-eslint/lines-between-class-members": ["off"],
+  "arrow-parens": "off",
+  "no-plusplus": "off",
+  "spaced-comment": ["off"],
+  "ngrx/prefer-effect-callback-in-block-statement": "off",
+  "ngrx/on-function-explicit-return-type": "off"
+}
