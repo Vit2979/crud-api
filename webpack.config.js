@@ -5,7 +5,7 @@ module.exports = {
   mode: 'production',
   target: 'node',
   entry: {
-    main: path.resolve(__dirname, './src/ts/index.ts')
+    main: path.resolve(__dirname, './src/ts/server.ts')
   },
   output: {
     path: path.resolve(__dirname, './app'),
