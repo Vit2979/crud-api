@@ -3,25 +3,41 @@ import { v4 as uuidv4 } from 'uuid';
 import { userType } from '../models/user.model';
 
 export class DataBase {
-  public readonly users: userType[] = [];
+    private readonly users: userType[] = [];
 
-  public async getUsers(): Promise < userType[] > {
-    return this.users; 
-  }
-
-  public async addUser(): Promise < userType > {
-    const id = this.getId();
-    const user = {
-      id,
-      username: '',
-      age: 0,
-      hobbies: [],
-    };
-    this.users.push(user);
-    return user;
-  }
-
-  private getId(): string {
+    public async getUsers(): Promise < userType[] > {
+      return this.users; 
+    }
+  
+    public async findUser(id: string): Promise < userType > {
+      const defaultUser = {
+    
+        username: '',
+        age: 0,
+        hobbies: [],
+      };
+      const users = this.users;
+      const user = users.find(el => el.id === id);
+      return (user) ? user : defaultUser;
+    }
+  
+    public async createUser(newUser: userType): Promise < userType > {
+      const user: userType = JSON.parse(JSON.stringify(newUser));
+      user.id = this.createId();
+      this.users.push(user);
+      return user;
+    }
+  
+    public async updateUser(newUser: userType): Promise < userType > {
+      const updatedUser: userType = JSON.parse(JSON.stringify(newUser));
+      this.users.forEach((oldUser, index) => {
+        if (oldUser.id === updatedUser.id) this.users[index] = updatedUser;
+      });
+      return updatedUser;
+    }
+  
+    private createId(): string {
+  
     let id = '';
     let isUnique = false;
     while (!isUnique) {
