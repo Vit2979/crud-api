@@ -1,6 +1,8 @@
 import { createServer, IncomingMessage, ServerResponse } from 'http';
 import 'dotenv/config';
- 
+import os from 'os';
+import cluster from 'cluster';
+
 import { DataBase } from './database/database';
 import { getUsers, createUser, getSingleUser, updateSingleUser, deleteSingleUser } from './controllers/user-controller';
 
@@ -9,7 +11,7 @@ const PORT = Number(process.env.PORT);
 const HOSTNAME = 'localhost';
 const ROUTE_ERROR_MESSAGE = 'Route Not Found';
  
-const requestHandler = (request: IncomingMessage, response: ServerResponse) => {
+const requestHandler = (request: IncomingMessage, response: ServerResponse): void => {
   const { method, url } = request;
   if (method && url) {
     if (method === 'GET' && url === '/api/users') getUsers(response, database);
@@ -32,8 +34,23 @@ const requestHandler = (request: IncomingMessage, response: ServerResponse) => {
   }
 };
 
-const server = createServer(requestHandler);
+const runServer = (): void => {
+  const server = createServer(requestHandler);
+  server.listen(PORT, HOSTNAME, () => {
+    console.log(`Сервер запущен на порту ${PORT}`);
+  });
+}
 
-server.listen(PORT, HOSTNAME, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
-});
+if (process.argv.length === 3 && process.argv[2] === 'multi') {
+  if (cluster.isPrimary) {
+    let cpus = os.cpus();
+    cpus.forEach(() => {
+      const worker = cluster.fork();
+      worker.send(`Worker id: ${worker.id} launched`);
+    });
+  } else {
+    runServer();
+    process.on('message', message => console.log(`Message from master: "${message}"`));
+  }
+} else runServer();
+
