@@ -2,7 +2,7 @@ import { createServer, IncomingMessage, ServerResponse } from 'http';
 import 'dotenv/config';
  
 import { DataBase } from './database/database';
-import { getUsers, createUser, getSingleUser, updateSingleUser } from './controllers/user-controller';
+import { getUsers, createUser, getSingleUser, updateSingleUser, deleteSingleUser } from './controllers/user-controller';
 
 const database = new DataBase(); 
 const PORT = Number(process.env.PORT);
@@ -19,6 +19,9 @@ const requestHandler = (request: IncomingMessage, response: ServerResponse) => {
     } else if (method === 'PUT' && url.match(/\/api\/users\/([0-9a-zA-Z-]+)/)) {
       const id = url.split('/')[3];
       updateSingleUser(request, response, database, id);
+    } else if (method === 'DELETE' && url.match(/\/api\/users\/([0-9a-zA-Z-]+)/)) {
+      const id = url.split('/')[3];
+      deleteSingleUser(response, database, id);
     } else if (method === 'POST' && url === '/api/users') createUser(request, response, database);
     else {
       const outputContent = JSON.stringify({message: ROUTE_ERROR_MESSAGE});

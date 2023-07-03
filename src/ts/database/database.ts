@@ -10,8 +10,7 @@ export class DataBase {
     }
   
     public async findUser(id: string): Promise < userType > {
-      const defaultUser = {
-    
+      const defaultUser = {    
         username: '',
         age: 0,
         hobbies: [],
@@ -35,9 +34,16 @@ export class DataBase {
       });
       return updatedUser;
     }
+
+    public async deleteUser(userToDelete: userType): Promise < void > {
+      let foundIndex: number | null = null;
+      this.users.forEach((user, index) => {
+        if (user.id === userToDelete.id) foundIndex = index;
+      });
+      if (foundIndex) this.users.splice(foundIndex, 1);
+    }
   
-    private createId(): string {
-  
+    private createId(): string {  
     let id = '';
     let isUnique = false;
     while (!isUnique) {
